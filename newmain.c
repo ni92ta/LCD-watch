@@ -13,13 +13,7 @@
 #include "newfile.h"
 #include "I2C.h"
 #include "LCD1621.h"
-//unsigned char u;
-//unsigned char i;
-//unsigned char y;
-//unsigned char p;
-//unsigned char t;//Флаг нажатия кнопки
-//unsigned char raz;
- unsigned char alrm;
+     unsigned char alrm;
      unsigned char sece;//единицы секунд
      unsigned char secd;//десятки секунд
      unsigned char sec;//секунды до преобразования
@@ -115,7 +109,7 @@ void PCF8563init (void){//инициализация микросхемы
       }
 }
 //------------------------------------------------------------------------------
-unsigned char RTC_ConvertFromDecd(unsigned char c,unsigned char v){//
+unsigned char RTC_ConvertFromDecd(unsigned char c,unsigned char v){//Перевод из двоичного формата в десятичный
     unsigned char ch;
     if (v==1){
       c = c>>4;
@@ -128,29 +122,6 @@ unsigned char RTC_ConvertFromDecd(unsigned char c,unsigned char v){//
           c = c>>4;
        ch = (0b00000001&c);  
     }
-    
-   /* switch (v){
-        case 0:
-          ch = (c>>4);  
-            break;
-                    case 1:
-                  c = c>>4;
-       ch = (0b00000011&c); 
-            break;
-                    case 2:
-          ch = (0b00001111&c); ;  
-            break;
-    }
-    if (v==1) {
-        c = c>>4;
-       ch = (0b00000011&c);
-    }
-    if (v==0){
-       ch = (c>>4);  
-    }
-    if (v==2){
-       ch = (0b00001111&c);  
-    }*/
     return ch; 
 }
 //--------------------перевод из двоичного в единицы минут и часов--------------
@@ -321,7 +292,6 @@ return Yearsset;
 //-----------------------обработка нажатия кнопки (изменение значения)---------- 
 void button (unsigned char u,unsigned char i){
   unsigned int butcount=0;
-  
   while(!RB1)
   { 
     if(butcount < 400)
@@ -424,7 +394,6 @@ void clk_out (void){//
       butcount++;
     }
     else{ 
-       // unsigned char t;
 sendbyte(0b00010010);//TONE ON
 dela_y ();
 sendbyte(0b00010000);//TONE OFF
@@ -626,42 +595,8 @@ while (!RB7) {
       I2C_SendByte (0b00000000);
       i2c_stop ();//отправка посылки СТОП 
       alrm = 0;
-    }
-   /* unsigned char butcoun = 0;
-     unsigned char alrm;
-        if(butcoun < 400)
-    {
-      butcoun++;
-    }
-    else{ 
-            RB3 = 1;
-    alrm ++;
-        //  break; 
-             } 
-    if (alrm == 1){
-        RB3 = 0;
-      i2c_start();//отправка посылки СТАРТ
-      I2C_SendByte (dev_addrw);//адрес часовой микросхемы - запись
-      I2C_SendByte (0b00001011);//вызов регистра контроля
-      I2C_SendByte (0b00000000);
-      I2C_SendByte (0b00000000);
-      i2c_stop ();//отправка посылки СТОП 
-    }
-    if (alrm == 2){
-        RB3 = 1;
-      i2c_start();//отправка посылки СТАРТ
-      I2C_SendByte (dev_addrw);//адрес часовой микросхемы - запись
-      I2C_SendByte (0b00001011);//вызов регистра контроля
-      I2C_SendByte (0b10000000);
-      I2C_SendByte (0b10000000);
-      i2c_stop ();//отправка посылки СТОП  
-      alrm = 0;
-    }
-   */      
-
-    }       
-       
-//------------------------------------------------------------------------------     
+    }     
+    }            
                 }     
 //---------------проверка условия включения будильника--------------------------
       i2c_start();//отправка посылки СТАРТ
@@ -688,7 +623,6 @@ while (!RB2) {
       i2c_stop ();//отправка посылки СТОП  
              } 
                                 }
-     
 }
 //------------------------------------------------------------------------------
 void main(void) {
@@ -697,15 +631,6 @@ void main(void) {
     CM1 = 1;//отключение компаратора (порт А - цифровой)       
     CM0 = 1;//отключение компаратора (порт А - цифровой)
     T0CS = 1;
-    //RP1 = 0;
-   // RP0 = 1;
-   // OPTIONREG = 0b00000000;
- //FOSC2 = 0;
- //FOSC1 = 1;
- //FOSC0 = 0;  
-    //INTCON = 0b00010000;
-   // INTEDG = 0;
-    
     PORTA = 0b00000000;//11111100
     TRISA = 0b11111100;//11111100
     PORTB = 0b10001111;//10001111
@@ -720,7 +645,6 @@ dela_y();
 dela_y();
 dela_y();
      PCF8563init(); 
-     //HT1621init();
 sendbyte(0b00010000);//TONE OFF  
         
     while (1){
@@ -759,34 +683,6 @@ sendbyte(0b00010000);//TONE OFF
       Years_pre = RTC_ConvertFromDec(Years);
       Years_prd = RTC_ConvertFromDecd(Years,0);
 //--------------------выбор режима настройки (время, будильник, дата)-----------
-clk_out ();
-     
-       
-      
+clk_out ();  
     }    
 }
-
-/*
- if (t==7){//
-       button(Years,7);  
-       CS=0;
-       i1621_adre(0b001000);
-       LCD_OUT (Days_prd,0);//
-       LCD_OUT (Days_pre,1); //
-       LCD_OUT (Months_prd,0);//
-       LCD_OUT (Months_pre,1);//
-       LCD_OUT (Years_prd,0);
-       LCD_OUT (Years_pre,0);
-       CS=1;
-dela_y(); 
-       CS=0;
-       i1621_adre(0b010100);
-       seg_blink ();
-       CS=1;
-dela_y();
-       }   
- 
- * 			PORTB |= 0x7;//установка бита
-			PORTB &= ~0x7;//сброс бита
- * 
- */
