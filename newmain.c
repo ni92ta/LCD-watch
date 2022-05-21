@@ -4,7 +4,7 @@
  *Часы на pic16f628  и PCF8563
  * Created on 22 июля 2021 г., 20:00
  */
-#define _XTAL_FREQ 70000
+#define _XTAL_FREQ 70000// низкая тактовая частота для снижения энергопотребления
 #define dev_addrw 0b10100010 //запись
 #define dev_addrr 0b10100011 //чтение
 // #pragma config statements should precede project file includes.
@@ -83,9 +83,7 @@ void PCF8563init (void){//инициализация микросхемы
       I2C_SendByte (dev_addrr);//адрес часовой микросхемы - чтение
       control_3 = I2C_ReadByte_last();//чтение регистра 
       i2c_stop ();//
-      if (0b10000000 & control_3 ){  
-        
-        
+      if (0b10000000 & control_3 ){//читаем бит контроля, если было снижение питания, то время не настраиваем      
     i2c_start ();//отправка посылки СТАРТ
     I2C_SendByte (dev_addrw);//адрес часовой микросхемы - запись
     I2C_SendByte (0b00000010);//вызов регистра секунд
@@ -129,8 +127,8 @@ unsigned char RTC_ConvertFromDec(unsigned char c){//
     unsigned char ch = (0b00001111&c);
     return ch;
 }
-//--------------вывод цифры надисплей-------------------------------------------
-void LCD_OUT (unsigned char s,unsigned char ss){
+//--------------вывод цифры на дисплей-------------------------------------------
+void LCD_OUT (unsigned char s,unsigned char ss){// если нужна цифра с десятичной точкой, то SS=1
  switch (s)
     {
         case 0:
