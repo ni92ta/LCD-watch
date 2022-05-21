@@ -4,14 +4,11 @@
  *
  * Created on 31 марта 2021 г., 13:34
  */
-
-
 #include <xc.h>
 #include "I2C.h"
 #define _XTAL_FREQ 70000
-//int result =0;
 //-------------------------------------------------------
-void i2c_start(void)
+void i2c_start(void)// стартовая посылка
 {
 SCL = 1;
 SDA = 1;
@@ -21,7 +18,7 @@ __delay_us(20);
 SCL = 0;  
 }
 //-------------------------------------------------------
-void i2c_stop (void)
+void i2c_stop (void)// стоп
 {
 SDA = 0;
 __delay_us(20);
@@ -31,10 +28,9 @@ SDA = 1;
 __delay_us(20);
 }
 //-------------------------------------------------------
-void I2C_SendByte (unsigned char d)
+void I2C_SendByte (unsigned char d)//отправка байта
 {
 char x;
-//unsigned char b;
 for (x=0; x<8; x++) { //передача 8 бит данных
 __delay_us(20);
 if (d&0x80) SDA = 1;//логический 0
@@ -55,7 +51,7 @@ SDA = 0;
 //return result; //Возвращаем значение бита ACK через функцию  
 }
 //-------------------------------------------------------
-int I2C_ReadByte (void)
+int I2C_ReadByte (void)//приём байта
 {   
 char i;
 int result = 0;
@@ -78,7 +74,7 @@ __delay_us(20);
 return result; //Возвращаем значение бита ACK через функцию 
 }
 //-------------------------------------------------------
-int I2C_ReadByte_last (void)
+int I2C_ReadByte_last (void)//отправка последнего байта в посылке
 {
 char i;
 int result = 0;
