@@ -103,5 +103,3 @@ void init_1621(unsigned char inform){
   __delay_us(1);   
      } 
 }
-
-
