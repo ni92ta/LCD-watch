@@ -13,6 +13,7 @@
 #include "newfile.h"
 #include "I2C.h"
 #include "LCD1621.h"
+     unsigned char t = 0;//Флаг нажатия кнопки устанавливаем в 0, чтоб при сбросе питания часы стабильно запускались
      unsigned char alrm;
      unsigned char sece;//единицы секунд
      unsigned char secd;//десятки секунд
@@ -286,7 +287,6 @@ unsigned char vyb_raz_year (unsigned char u){
     if (u == 0b01111001) Yearsset = 0b00000000;//если больше 79 записываем в переменную 0  
 return Yearsset;
 }
-
 //-----------------------обработка нажатия кнопки (изменение значения)---------- 
 void button (unsigned char u,unsigned char i){
   unsigned int butcount=0;
@@ -384,7 +384,6 @@ void dela_yy (void){
 }
 //-----------------------------вывод--------------------------------------------
 void clk_out (void){//
-    unsigned char t = 0;//Флаг нажатия кнопки устанавливаем в ), чтоб при сбросе питания часы стабильно запускались
          unsigned int butcount=0;
     while (!RB0){
     if(butcount < 400)
